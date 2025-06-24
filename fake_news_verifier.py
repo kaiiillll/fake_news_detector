@@ -25,3 +25,9 @@ class FakeNewsVerifierApp:
         self.master.geometry("1000x800")
         self.master.resizable(False, False)
         self.master.configure(bg="#0f0e17")
+        
+# for the fonts 
+        self.title_font = ("Impact", 42, "bold")
+        self.subtitle_font = ("Helvetica", 16)
+        self.button_font = ("Arial Rounded MT Bold", 18)
+        self.result_font = ("Verdana", 20, "bold")
