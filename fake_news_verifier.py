@@ -17,3 +17,11 @@ import os
 import random
 from tkinter import font as tkfont
 import webbrowser
+
+class FakeNewsVerifierApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("FAKE NEWS DETECTOR 3000")
+        self.master.geometry("1000x800")
+        self.master.resizable(False, False)
+        self.master.configure(bg="#0f0e17")
