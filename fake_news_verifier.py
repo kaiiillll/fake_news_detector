@@ -49,3 +49,40 @@ class FakeNewsVerifierApp:
         
         self.build_model()
         self.show_intro_animation()
+        
+# history and load informations
+        self.history = []
+
+    def build_model(self):
+        data = pd.DataFrame({
+            'headline': [
+                "Aliens landed in New York", "Government passes new law", 
+                "New cure for cancer discovered", "Facebook to start charging users",
+                "Stock market hits record high", "Eating chocolate daily increases life span",
+                "NASA confirms water on Mars", "Celebrity caught in scandal again",
+                "President announces new policy", "Scientists discover new planet",
+                "Vaccines cause autism", "5G networks spread COVID-19",
+                "Earth is flat, scientists confirm", "Moon landing was faked",
+                "New education bill passed in Congress", "Economic growth reaches 5% this quarter",
+                "Drinking bleach cures COVID-19", "Bill Gates implants microchips in vaccines",
+                "Local community raises funds for hospital", "Company announces revolutionary product",
+                "Politician found guilty of corruption", "School wins national competition",
+                "Weather forecast predicts sunny weekend", "New study shows benefits of exercise",
+                "Man claims to be time traveler from 2050", "Photoshop used to alter celebrity images",
+                "Breaking news: Major breakthrough in science", "Official statistics show unemployment drop",
+                "New smartphone can charge in 30 seconds", "Study finds coffee extends lifespan",
+                "Politician promises free money for all", "Scientists create artificial black hole",
+                "Company invents perpetual motion machine", "Government bans all social media",
+                "New app can read your thoughts", "Celebrity couple announces divorce",
+                "World record set for longest marathon", "City announces new public transport system"
+            ],
+            'label': ["FAKE", "REAL", "FAKE", "FAKE", "REAL", "FAKE", "REAL", "FAKE",
+                     "REAL", "REAL", "FAKE", "FAKE", "FAKE", "FAKE", "REAL", "REAL",
+                     "FAKE", "FAKE", "REAL", "REAL", "REAL", "REAL", "REAL", "REAL",
+                     "FAKE", "FAKE", "REAL", "REAL", "FAKE", "FAKE", "FAKE", "FAKE",
+                     "FAKE", "FAKE", "FAKE", "REAL", "REAL", "REAL"]
+        })
+
+        X_train, _, y_train, _ = train_test_split(data['headline'], data['label'], test_size=0.3, random_state=42)
+        self.model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+        self.model.fit(X_train, y_train)
