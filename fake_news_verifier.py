@@ -31,3 +31,21 @@ class FakeNewsVerifierApp:
         self.subtitle_font = ("Helvetica", 16)
         self.button_font = ("Arial Rounded MT Bold", 18)
         self.result_font = ("Verdana", 20, "bold")
+        
+# Color and Animations
+        self.colors = {
+            "bg": "#0f0e17",
+            "primary": "#ff8906",
+            "secondary": "#f25f4c",
+            "accent": "#e53170",
+            "text": "#fffffe",
+            "card": "#16161a",
+            "real": "#2cb67d",
+            "fake": "#ef4565"
+        }
+        
+        self.animation_running = False
+        self.particles = []
+        
+        self.build_model()
+        self.show_intro_animation()
