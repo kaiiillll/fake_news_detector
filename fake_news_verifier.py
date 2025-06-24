@@ -86,3 +86,168 @@ class FakeNewsVerifierApp:
         X_train, _, y_train, _ = train_test_split(data['headline'], data['label'], test_size=0.3, random_state=42)
         self.model = make_pipeline(TfidfVectorizer(), MultinomialNB())
         self.model.fit(X_train, y_train)
+        
+    def show_intro_animation(self):
+        self.intro_frame = tk.Frame(self.master, bg=self.colors["bg"])
+        self.intro_frame.pack(expand=True, fill="both")
+
+        # Animated title
+        self.title_label = tk.Label(
+            self.intro_frame, 
+            text="FAKE NEWS DETECTOR 3000",
+            font=self.title_font,
+            fg=self.colors["primary"],
+            bg=self.colors["bg"]
+        )
+        self.title_label.pack(pady=80)
+
+        # Glowing subtitle
+        self.subtitle_label = tk.Label(
+            self.intro_frame,
+            text="Advanced AI-powered misinformation detection system",
+            font=self.subtitle_font,
+            fg=self.colors["text"],
+            bg=self.colors["bg"]
+        )
+        self.subtitle_label.pack(pady=10)
+
+        # Animated loading bar
+        self.loading_bar = ttk.Progressbar(
+            self.intro_frame,
+            orient="horizontal",
+            length=400,
+            mode="determinate"
+        )
+        self.loading_bar.pack(pady=30)
+
+        # Loading status
+        self.loading_text = tk.Label(
+            self.intro_frame,
+            text="Initializing neural networks...",
+            font=("Helvetica", 12),
+            fg=self.colors["text"],
+            bg=self.colors["bg"]
+        )
+        self.loading_text.pack()
+
+        # Start animation
+        self.animate_intro()
+
+    def animate_intro(self):
+        def update_loading():
+            for i in range(101):
+                self.loading_bar["value"] = i
+                if i < 30:
+                    self.loading_text.config(text="Initializing neural networks...")
+                elif i < 60:
+                    self.loading_text.config(text="Loading training data...")
+                elif i < 90:
+                    self.loading_text.config(text="Calibrating detectors...")
+                else:
+                    self.loading_text.config(text="Ready to analyze!")
+                self.master.update()
+                time.sleep(0.03)
+            self.intro_frame.destroy()
+            self.create_main_interface()
+
+        threading.Thread(target=update_loading).start()
+
+    def create_main_interface(self):
+        # Main container with gradient background simulation
+        self.main_frame = tk.Frame(self.master, bg=self.colors["bg"])
+        self.main_frame.pack(expand=True, fill="both")
+
+        # Header with animated particles
+        self.header_frame = tk.Frame(self.main_frame, bg=self.colors["bg"])
+        self.header_frame.pack(fill="x", pady=(20, 0))
+
+        # Title with glowing effect
+        self.main_title = tk.Label(
+            self.header_frame,
+            text="📡 FAKE NEWS DETECTOR",
+            font=self.title_font,
+            fg=self.colors["primary"],
+            bg=self.colors["bg"]
+        )
+        self.main_title.pack(pady=10)
+
+        # Subtitle with typewriter effect
+        self.main_subtitle = tk.Label(
+            self.header_frame,
+            text="",
+            font=self.subtitle_font,
+            fg=self.colors["text"],
+            bg=self.colors["bg"],
+            wraplength=800
+        )
+        self.main_subtitle.pack(pady=5)
+        self.typewriter_effect("Enter a news headline below to verify its authenticity using our advanced AI detection system.", self.main_subtitle)
+
+        # Input card
+        input_card = tk.Frame(
+            self.main_frame,
+            bg=self.colors["card"],
+            padx=20,
+            pady=20,
+            highlightbackground=self.colors["primary"],
+            highlightthickness=2
+        )
+        input_card.pack(pady=20, padx=40, fill="x")
+
+        # Entry field with modern design
+        self.entry_var = tk.StringVar()
+        self.entry = tk.Entry(
+            input_card,
+            textvariable=self.entry_var,
+            width=60,
+            font=("Helvetica", 18),
+            bg="#2e2e3a",
+            fg=self.colors["text"],
+            bd=0,
+            insertbackground=self.colors["primary"],
+            selectbackground=self.colors["primary"],
+            relief=tk.FLAT
+        )
+        self.entry.insert(0, "Paste news headline here...")
+        self.entry.bind("<FocusIn>", self.clear_placeholder)
+        self.entry.bind("<Return>", lambda event: self.check_news())
+        self.entry.pack(pady=10, ipady=12, ipadx=10)
+
+        # Check button with hover effects
+        self.check_button = tk.Button(
+            input_card,
+            text="🚀 ANALYZE HEADLINE",
+            command=self.check_news,
+            font=self.button_font,
+            bg=self.colors["primary"],
+            fg="black",
+            activebackground=self.colors["secondary"],
+            activeforeground="white",
+            bd=0,
+            padx=30,
+            pady=10,
+            relief=tk.RAISED
+        )
+        self.check_button.pack(pady=15)
+
+        # Result display area
+        self.result_frame = tk.Frame(
+            self.main_frame,
+            bg=self.colors["card"],
+            padx=20,
+            pady=20,
+            highlightbackground=self.colors["accent"],
+            highlightthickness=2
+        )
+        self.result_frame.pack(pady=20, padx=40, fill="both", expand=True)
+
+        # Result label with animation
+        self.result_label = tk.Label(
+            self.result_frame,
+            text="Results will appear here",
+            font=self.result_font,
+            fg=self.colors["text"],
+            bg=self.colors["card"],
+            wraplength=800
+        )
+        self.result_label.pack(pady=30)
