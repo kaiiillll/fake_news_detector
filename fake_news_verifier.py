@@ -3,3 +3,17 @@
 # Make it reliable
 # Make it amazing 
 # Special Thanks to rahil patel
+import tkinter as tk
+from tkinter import messagebox, ttk
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+import threading
+import time
+import datetime
+import os
+import random
+from tkinter import font as tkfont
+import webbrowser
