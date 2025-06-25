@@ -371,3 +371,68 @@ class FakeNewsVerifierApp:
             self.shake_input()
             messagebox.showwarning("Empty Input", "Please enter a news headline to verify.")
             return
+
+        self.result_label.config(text="🧠 Analyzing with neural networks...", fg=self.colors["primary"])
+        self.confidence_label.config(text="")
+        self.confidence_meter["value"] = 0
+        self.master.update()
+
+        
+        for i in range(5):
+            dots = "." * (i % 4)
+            self.result_label.config(text=f"🧠 Analyzing with neural networks{dots}")
+            self.master.update()
+            time.sleep(0.2)
+
+        # Get prediction and confidence
+        prediction = self.model.predict([text])[0]
+        proba = self.model.predict_proba([text])[0]
+        confidence = max(proba) * 100
+        
+        # Determine color and emoji based on prediction
+        if prediction == "REAL":
+            color = self.colors["real"]
+            emoji = random.choice(["✅", "✔️", "🔍", "📰", "📊", "🔬"])
+            result_text = f"{emoji} VERIFIED: This news appears to be REAL"
+            meter_color = self.colors["real"]
+        else:
+            color = self.colors["fake"]
+            emoji = random.choice(["❌", "⚠️", "🚫", "🔞", "❓", "⁉️"])
+            result_text = f"{emoji} WARNING: This news appears to be FAKE"
+            meter_color = self.colors["fake"]
+        
+        self.result_label.config(text=result_text, fg=color)
+        
+        self.animate_confidence_meter(confidence, meter_color)
+        
+        self.confidence_label.config(text=f"Confidence: {confidence:.1f}%")
+        
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.history.append((timestamp, text, prediction, f"{confidence:.1f}%"))
+        
+        with open("news_results.txt", "a") as file:
+            file.write(f"{timestamp} | {text} => {prediction} ({confidence:.1f}%)\n")
+
+    def animate_confidence_meter(self, target_value, color):
+        style = ttk.Style()
+        style.configure("animated.Horizontal.TProgressbar",
+                       thickness=20,
+                       troughcolor=self.colors["bg"],
+                       background=color,
+                       bordercolor=self.colors["accent"])
+        
+        self.confidence_meter.config(style="animated.Horizontal.TProgressbar")
+        
+        current_value = 0
+        increment = target_value / 20
+        
+        def update():
+            nonlocal current_value
+            if current_value < target_value:
+                current_value += increment
+                if current_value > target_value:
+                    current_value = target_value
+                self.confidence_meter["value"] = current_value
+                self.master.after(20, update)
+        
+        update()
