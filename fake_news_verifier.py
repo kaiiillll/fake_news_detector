@@ -340,3 +340,34 @@ class FakeNewsVerifierApp:
     def animate_particles(self):
         if not self.animation_running:
             return
+
+# Partiles of animations
+        if random.random() < 0.3:
+            x = random.randint(0, 1000)
+            y = 0
+            size = random.randint(2, 6)
+            speed = random.uniform(1, 3)
+            color = random.choice([self.colors["primary"], self.colors["secondary"], self.colors["accent"]])
+            particle = self.header_frame.create_oval(x, y, x+size, y+size, fill=color, outline="")
+            self.particles.append((particle, speed))
+
+        for i, (particle, speed) in enumerate(self.particles[:]):
+            self.header_frame.move(particle, 0, speed)
+            pos = self.header_frame.coords(particle)
+            if pos[1] > 100:  
+                self.header_frame.delete(particle)
+                self.particles.remove((particle, speed))
+
+        self.master.after(30, self.animate_particles)
+
+    def clear_placeholder(self, event):
+        if self.entry.get() == "Paste news headline here...":
+            self.entry.delete(0, tk.END)
+            self.entry.config(fg=self.colors["text"])
+
+    def check_news(self):
+        text = self.entry.get().strip()
+        if not text or text == "Paste news headline here...":
+            self.shake_input()
+            messagebox.showwarning("Empty Input", "Please enter a news headline to verify.")
+            return
