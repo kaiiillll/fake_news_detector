@@ -436,3 +436,52 @@ class FakeNewsVerifierApp:
                 self.master.after(20, update)
         
         update()
+        
+    def shake_input(self):
+        x = self.entry.winfo_x()
+        for i in range(0, 5):
+            for offset in [5, -5, 3, -3, 1, -1, 0]:
+                self.entry.place(x=x+offset)
+                self.master.update()
+                time.sleep(0.02)
+        self.entry.place(x=x)
+
+    def show_history(self):
+        history_window = tk.Toplevel(self.master)
+        history_window.title("Verification History")
+        history_window.geometry("900x700")
+        history_window.resizable(False, False)
+        history_window.configure(bg=self.colors["bg"])
+        
+        # Header
+        header = tk.Label(
+            history_window, 
+            text="📜 VERIFICATION HISTORY",
+            font=("Impact", 28),
+            bg=self.colors["bg"],
+            fg=self.colors["primary"]
+        )
+        header.pack(pady=20)
+        
+        # Text widget with scrollbar
+        frame = tk.Frame(history_window, bg=self.colors["bg"])
+        frame.pack(fill="both", expand=True, padx=30, pady=10)
+        
+        scrollbar = tk.Scrollbar(frame)
+        scrollbar.pack(side="right", fill="y")
+        
+        history_text = tk.Text(
+            frame,
+            wrap="word",
+            yscrollcommand=scrollbar.set,
+            font=("Courier New", 12),
+            bg=self.colors["card"],
+            fg=self.colors["text"],
+            padx=20,
+            pady=20,
+            width=80,
+            height=25,
+            insertbackground=self.colors["primary"]
+        )
+        history_text.pack(side="left", fill="both", expand=True)
+        scrollbar.config(command=history_text.yview)
