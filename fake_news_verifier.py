@@ -153,15 +153,14 @@ class FakeNewsVerifierApp:
         threading.Thread(target=update_loading).start()
 
     def create_main_interface(self):
-        # Main container with gradient background simulation
         self.main_frame = tk.Frame(self.master, bg=self.colors["bg"])
         self.main_frame.pack(expand=True, fill="both")
 
-        # Header with animated particles
+        
         self.header_frame = tk.Frame(self.main_frame, bg=self.colors["bg"])
         self.header_frame.pack(fill="x", pady=(20, 0))
 
-        # Title with glowing effect
+       
         self.main_title = tk.Label(
             self.header_frame,
             text="📡 FAKE NEWS DETECTOR",
@@ -171,7 +170,7 @@ class FakeNewsVerifierApp:
         )
         self.main_title.pack(pady=10)
 
-        # Subtitle with typewriter effect
+  
         self.main_subtitle = tk.Label(
             self.header_frame,
             text="",
@@ -183,7 +182,7 @@ class FakeNewsVerifierApp:
         self.main_subtitle.pack(pady=5)
         self.typewriter_effect("Enter a news headline below to verify its authenticity using our advanced AI detection system.", self.main_subtitle)
 
-        # Input card
+       
         input_card = tk.Frame(
             self.main_frame,
             bg=self.colors["card"],
@@ -194,7 +193,7 @@ class FakeNewsVerifierApp:
         )
         input_card.pack(pady=20, padx=40, fill="x")
 
-        # Entry field with modern design
+        
         self.entry_var = tk.StringVar()
         self.entry = tk.Entry(
             input_card,
@@ -213,7 +212,7 @@ class FakeNewsVerifierApp:
         self.entry.bind("<Return>", lambda event: self.check_news())
         self.entry.pack(pady=10, ipady=12, ipadx=10)
 
-        # Check button with hover effects
+       
         self.check_button = tk.Button(
             input_card,
             text="🚀 ANALYZE HEADLINE",
@@ -230,7 +229,7 @@ class FakeNewsVerifierApp:
         )
         self.check_button.pack(pady=15)
 
-        # Result display area
+       
         self.result_frame = tk.Frame(
             self.main_frame,
             bg=self.colors["card"],
@@ -241,7 +240,7 @@ class FakeNewsVerifierApp:
         )
         self.result_frame.pack(pady=20, padx=40, fill="both", expand=True)
 
-        # Result label with animation
+        
         self.result_label = tk.Label(
             self.result_frame,
             text="Results will appear here",
@@ -251,3 +250,93 @@ class FakeNewsVerifierApp:
             wraplength=800
         )
         self.result_label.pack(pady=30)
+        
+ # History and Buttons
+        self.confidence_frame = tk.Frame(self.result_frame, bg=self.colors["card"])
+        self.confidence_frame.pack(fill="x", pady=10)
+
+        self.confidence_label = tk.Label(
+            self.confidence_frame,
+            text="",
+            font=("Helvetica", 14),
+            fg=self.colors["text"],
+            bg=self.colors["card"]
+        )
+        self.confidence_label.pack(side="left")
+
+        self.confidence_meter = ttk.Progressbar(
+            self.confidence_frame,
+            orient="horizontal",
+            length=300,
+            mode="determinate",
+            style="custom.Horizontal.TProgressbar"
+        )
+        self.confidence_meter.pack(side="right", padx=10)
+
+        # Custom style for progress bar
+        style = ttk.Style()
+        style.theme_use('clam')
+        style.configure("custom.Horizontal.TProgressbar",
+                       thickness=20,
+                       troughcolor=self.colors["bg"],
+                       background=self.colors["primary"],
+                       bordercolor=self.colors["accent"],
+                       lightcolor=self.colors["secondary"],
+                       darkcolor=self.colors["primary"])
+
+        footer_frame = tk.Frame(self.main_frame, bg=self.colors["bg"])
+        footer_frame.pack(fill="x", pady=(0, 20))
+
+        history_btn = tk.Button(
+            footer_frame,
+            text="📜 VIEW HISTORY",
+            command=self.show_history,
+            font=("Helvetica", 12, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            activebackground=self.colors["secondary"],
+            bd=0,
+            padx=20,
+            pady=8
+        )
+        history_btn.pack(side="left", padx=20)
+
+        info_btn = tk.Button(
+            footer_frame,
+            text="ℹ️ ABOUT",
+            command=self.show_info,
+            font=("Helvetica", 12, "bold"),
+            bg="#6246ea",
+            fg="white",
+            activebackground="#3d2b8c",
+            bd=0,
+            padx=20,
+            pady=8
+        )
+        info_btn.pack(side="left", padx=10)
+
+        
+        self.start_particle_animation()
+
+       
+        if not os.path.exists("news_results.txt"):
+            with open("news_results.txt", "w") as f:
+                f.write("FAKE NEWS DETECTOR HISTORY LOG\n")
+                f.write("="*50 + "\n")
+
+    def typewriter_effect(self, text, label):
+        def add_char(i=0):
+            if i < len(text):
+                current_text = label.cget("text") + text[i]
+                label.config(text=current_text)
+                self.master.after(30, add_char, i+1)
+        label.config(text="")
+        add_char()
+
+    def start_particle_animation(self):
+        self.animation_running = True
+        self.animate_particles()
+
+    def animate_particles(self):
+        if not self.animation_running:
+            return
