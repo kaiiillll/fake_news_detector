@@ -485,3 +485,112 @@ class FakeNewsVerifierApp:
         )
         history_text.pack(side="left", fill="both", expand=True)
         scrollbar.config(command=history_text.yview)
+        
+ 
+        try:
+            with open("news_results.txt", "r") as file:
+                history_content = file.read()
+                history_text.insert("1.0", history_content)
+        except:
+            history_text.insert("1.0", "No history available yet.")
+        
+        history_text.config(state="disabled")
+        
+        
+        close_btn = tk.Button(
+            history_window,
+            text="CLOSE",
+            command=history_window.destroy,
+            font=("Helvetica", 14, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            activebackground=self.colors["secondary"],
+            bd=0,
+            padx=30,
+            pady=10
+        )
+        close_btn.pack(pady=20)
+
+    def show_info(self):
+        info_window = tk.Toplevel(self.master)
+        info_window.title("About Fake News Detector")
+        info_window.geometry("600x500")
+        info_window.resizable(False, False)
+        info_window.configure(bg=self.colors["bg"])
+        
+        
+        header = tk.Label(
+            info_window, 
+            text="ℹ️ ABOUT THIS APP",
+            font=("Impact", 28),
+            bg=self.colors["bg"],
+            fg=self.colors["primary"]
+        )
+        header.pack(pady=20)
+        
+        
+        info_frame = tk.Frame(info_window, bg=self.colors["card"], padx=20, pady=20)
+        info_frame.pack(fill="both", expand=True, padx=30, pady=10)
+        
+        about_text = """FAKE NEWS DETECTOR 3000
+
+Version: 2.0.0
+Developed by: AI Security Labs
+
+This application uses machine learning to analyze news headlines and predict their authenticity. The system is trained on thousands of verified real and fake news examples.
+
+Features:
+✔️ Advanced AI detection
+✔️ Confidence scoring
+✔️ Historical analysis
+✔️ Real-time verification
+
+Note: This tool provides predictions, not absolute truth. Always verify important information through multiple reliable sources.
+
+For more information about fake news prevention, visit:
+https://www.mediawise.org"""
+        
+        info_label = tk.Label(
+            info_frame,
+            text=about_text,
+            font=("Helvetica", 12),
+            bg=self.colors["card"],
+            fg=self.colors["text"],
+            justify="left"
+        )
+        info_label.pack(anchor="w", pady=10)
+        
+        # Visit website button
+        website_btn = tk.Button(
+            info_frame,
+            text="🌐 VISIT RESOURCE CENTER",
+            command=lambda: webbrowser.open("https://www.mediawise.org"),
+            font=("Helvetica", 12, "bold"),
+            bg="#6246ea",
+            fg="white",
+            activebackground="#3d2b8c",
+            bd=0,
+            padx=20,
+            pady=8
+        )
+        website_btn.pack(pady=20)
+        
+        # Close button
+        close_btn = tk.Button(
+            info_window,
+            text="CLOSE",
+            command=info_window.destroy,
+            font=("Helvetica", 14, "bold"),
+            bg=self.colors["accent"],
+            fg="white",
+            activebackground=self.colors["secondary"],
+            bd=0,
+            padx=30,
+            pady=10
+        )
+        close_btn.pack(pady=10)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = FakeNewsVerifierApp(root)
+    root.mainloop()
